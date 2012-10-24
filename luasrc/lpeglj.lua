@@ -856,3 +856,52 @@ lpeg.setmaxstack = setmaxstack
 
 return lpeg
 
+--[=[
+local P = lpeg.P
+local C = lpeg.C
+local S = lpeg.S
+
+local function count(order)
+    return function(...)
+        return #(...) == 0 and 0 or select('#',...) * order
+    end
+end
+
+local function option(num)
+    return function(...)
+        return #(...) ~= 0 and num or 0
+    end
+end
+
+local function sum(...)
+    local s = 0
+    for i = 1,select('#',...) do
+        s = s + select(i,...)
+    end
+    return s
+end
+
+local pat = #S'MDCLXVI' * (C'M'^-3/count(1000) *
+        (P'CM'/'900' + P'CD'/'400' + (C'D' ^ -1/option'500') * (C'C' ^ -3/count(100))) *
+        (P'XC'/'90' + P'XL'/'40' + (C'L' ^ -1/option'50') * (C'X' ^ -3/count(10))) *
+        (P'IX'/'9' + P'IV'/'4' + C'V' ^ -1/option'5' * (C'I' ^ -4/count(1))))/sum * P(-1)
+
+
+local x = os.clock()
+for i = 1,1e0 do
+    print(pat:matchk('MCMXCVIII'))
+end
+print(os.clock())
+
+ffi.cdef[[
+  long GetTickCount();
+]]
+
+print(ffi.C.GetTickCount()/1e3/3600)
+
+
+local x = P('abc')^0
+
+
+print(lpeg.matchk(x,'abcabc'))
+--]=]
