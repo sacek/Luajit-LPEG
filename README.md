@@ -1,4 +1,7 @@
 Luajit-LPEG
 ===========
 
-Parser based on LPEG in LuaJIT
+LPeg parser in LuaJIT
+based on LPeg - PEG pattern matching for Lua
+** Lua.org & PUC-Rio  written by Roberto Ierusalimschy
+
